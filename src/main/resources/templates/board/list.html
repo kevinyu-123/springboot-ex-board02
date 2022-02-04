@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Board</title>
+</head>
+<script src="/js/jquery-3.5.1.min.js"></script>
+<script>
+	$(document).ready(function(){
+		var form = $("#board");
+		
+		// 삭제 버튼 클릭 이벤트
+		$(".btnRemove").on("click",function(){
+			var boardNo = $(this).val();
+			
+			form.empty();
+			form.append("<input type='hidden' name='boardNo' value='" + boardNo + "' />" );
+			form.attr("action", "/board/removeList");
+			form.attr("method", "post");
+			form.submit();
+			
+		});
+	
+		
+	});
+</script>
+<body>
+	<h2>게시판</h2>
+	<form id="board" th:action="@{search}" method="post" >
+		<a th:href="@{register}" >글쓰기</a>
+		<input type="text" name="keyword" />&nbsp;<input type="submit" value="검색" />
+		<table border="1">
+			<tr>
+				<th align="center" width="80">번호</th>
+				<th align="center" width="320">제목</th>
+				<th align="center" width="100">글쓴이</th>
+				<th	align="center" width="250">등록일자</th>	
+				<th align="center" width="45">삭제</th>	
+			<tr>
+			
+			<tr th:each="board : ${list}">
+				<td align="center" th:text="${board.boardNo}"></td>
+				<td align="left">
+					<a th:href="@{|/board/read?boardNo=${board.boardNo}|}" th:text="${board.title}"></a>
+				</td>
+				<td align="right" th:text="${board.writer}"></td>
+				<td align="center" th:text="${#dates.format(board.regDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+				<td align="center"><button class="btnRemove" type="button" th:value="${board.boardNo}">삭제</button></td>
+			</tr>
+			 
+		</table>
+	</form>
+</body>
+</html>
